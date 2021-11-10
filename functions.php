@@ -6,6 +6,12 @@
     wp_enqueue_style('main-university-css', get_stylesheet_uri());
   };
 
+  // Adds title tag to page.
+  function extra_support() {
+    add_theme_support('title-tag');
+  };
+
   add_action('wp_enqueue_scripts', 'load_files');
+  add_action('after_setup_theme', 'extra_support');
 
 ?>
