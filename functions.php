@@ -9,6 +9,7 @@
   // Adds title tag to page.
   function extra_support() {
     add_theme_support('title-tag');
+    register_nav_menu('headerMenuLocation', 'Header Menu Location');
   };
 
   add_action('wp_enqueue_scripts', 'load_files');
