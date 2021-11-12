@@ -24,8 +24,8 @@
           ?>
           <div class="event-summary">
             <a class="event-summary__date t-center" href="<?php the_permalink(); ?>">
-              <span class="event-summary__month"><?php the_date("M"); ?></span>
-              <span class="event-summary__day"><?php the_date("d"); ?></span>
+              <span class="event-summary__month">date</span>
+              <span class="event-summary__day">date</span>
             </a>
             <div class="event-summary__content">
               <h5 class="event-summary__title headline headline--tiny">
