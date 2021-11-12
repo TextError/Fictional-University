@@ -16,5 +16,4 @@
 
   add_action('wp_enqueue_scripts', 'load_files');
   add_action('after_setup_theme', 'extra_support');
-
 ?>
