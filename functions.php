@@ -22,7 +22,24 @@
     register_nav_menu('footerLocationOne', 'Footer Location One');
     register_nav_menu('footerLocationTwo', 'Footer Location Two');
   };
+  function adjust_queries($query) {
+    $today = date('Ymd');
+    if(!is_admin() AND is_post_type_archive('event') AND $query->is_main_query()) {
+      $query->set("meta_key", "event_date");
+      $query->set("orderby", "meta_value_num");
+      $query->set("order", "ASC");
+      $query->set("meta_query", array(
+        array(
+          "key" => "event_date",
+          "compare" => ">=",
+          "value" => $today,
+          "type" => "numeric"
+        )
+      ));
+    };
+  };
 
   add_action('wp_enqueue_scripts', 'load_files');
   add_action('after_setup_theme', 'extra_support');
+  add_action('pre_get_posts', 'adjust_queries');
 ?>
