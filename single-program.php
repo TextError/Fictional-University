@@ -19,6 +19,60 @@
         </div>
         <div class="generic-content">
           <?php the_content(); ?>
+          <?php 
+            $today = date('Ymd');
+            $queryEvents = new WP_Query(array(
+              "posts_per_page" => -1,
+              "post_type" => "event",
+              "meta_key" => "event_date",
+              "orderby" => "meta_value_num",
+              "order" => "ASC",
+              "meta_query" => array(
+                array(
+                  "key" => "event_date",
+                  "compare" => ">=",
+                  "value" => $today,
+                  "type" => "numeric"
+                ),
+                array(
+                  "key" => "related_programs",
+                  "compare" => "LIKE",
+                  "value" => '"'.get_the_ID().'"',
+                ),
+              ),
+            ));
+
+            if($queryEvents->have_posts()) {
+              ?>
+                <hr class="section-break">
+                <h2 class="headline headline--medium">Upcoming <?php the_title(); ?> Events </h2>
+              <?php
+              while($queryEvents->have_posts()) {
+                $queryEvents->the_post();
+                ?>
+                <div class="event-summary">
+                  <a class="event-summary__date t-center" href="<?php the_permalink(); ?>">
+                  
+                    <span class="event-summary__month"><?php
+                      $date = new DateTime(get_field('event_date'));
+                      echo $date->format('M');
+                    ?></span>
+                    <span class="event-summary__day"><?php echo $date->format('d'); ?></span>
+                  </a>
+                  <div class="event-summary__content">
+                    <h5 class="event-summary__title headline headline--tiny">
+                      <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                    </h5>
+                    <p>
+                      <?php wp_trim_words(the_content(), 18); ?>
+                    <a href="<?php the_permalink(); ?>" class="nu gray">Learn more</a></p>
+                  </div>
+                </div>
+                <?php
+              }
+              wp_reset_postdata();
+            };
+          ?>
         </div> 
       </div>
     <?php
