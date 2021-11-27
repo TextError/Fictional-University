@@ -18,6 +18,7 @@
   // Adds title tag to page.
   function extra_support() {
     add_theme_support('title-tag');
+    add_theme_support('post-thumbnails');
     register_nav_menu('headerMenuLocation', 'Header Menu Location');
     register_nav_menu('footerLocationOne', 'Footer Location One');
     register_nav_menu('footerLocationTwo', 'Footer Location Two');

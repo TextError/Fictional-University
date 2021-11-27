@@ -1,0 +1,107 @@
+
+
+#Info
+https://codex.wordpress.org
+https://developer.wordpress.org
+WordPress Dashicons
+
+#Rule of thumb
+  the_  echo the value
+  get_  return a value
+
+#ID
+  get_the_ID()  -> returns the ID page.
+  wp_get_post_parent_id() -> returns the parent ID page.
+    + 1 argument  Ex.  wp_get_post_parent_ID(get_the_ID()) ->  returns 0 [FALSE] or ID [EX. 23] of the parent page
+
+#Title
+  the_title();
+    returns Title of the curent post of page.
+  get_the_title();
+
+#Links
+  site_url();
+    Ex. site_url('/about');
+  get_permalink();
+
+#Pages
+  wp_list_pages()
+    1. title  Ex.  'title_li' => NULL   -> return no title
+    2. child_of  Ex. 'child_of' => get_the_ID() or parentID
+    3. sort_column  Ex.  'sort_column' => 'menu_order'
+  get_pages();
+    Ex. get_pages(array('child_of => get_the_ID()'));
+  register_post_type();
+    1st custom name refrence
+    2nd array of options to describe
+    must use plugins file  /wp-content/mu-plugins
+    register_post_type('event', array(
+      "has_archive" => true,
+      "rewrite" => array("slug" => "events"),
+      "public" => true,
+      "labels" => array(
+        "name" => "Events",
+        "add_new_item" => "Add new Event",
+        "edit_item" => "Edit Event",
+        "all_items" => "All Events",
+        "singular_name" => "Event"
+      ),
+      "menu_icon" => "dashicons-calendar"
+    ));
+    
+
+#Navbar
+  register_nav_menu();
+  wp_nav_menu();
+    1st argument: The argument name to pass to wp_nav_menu() for showing the menu. 
+    2nd argument: It shows on WP menu option after Create Menu -> Menu Settings.
+    Ex. register_nav_menu('headerMenuLocation', 'Header Menu Location');  function.php
+    Ex. wp_nav_menu(array('theme_location' => 'headerMenuLocation'));   file.php
+
+#Typography
+  wp_trim_words();
+    1st is the content
+    2nd how many words to limit.
+    Ex.echo wp_trim_words(the_content(), 18);
+
+#Query
+  $queryPosts = new WP_Query(array("posts_per_page" => 2,));  ==> wp_reset_postdata();
+
+  $today = date('Ymd');
+  $pastEvents = new WP_Query(array(
+    "paged" => get_query_var("paged", 1),
+    "posts_per_page" => 1,
+    "post_type" => "event",
+    "meta_key" => "event_date",
+    "orderby" => "meta_value_num",
+    "order" => "ASC",
+    "meta_query" => array(
+      array(
+        "key" => "event_date",
+        "compare" => "<",
+        "value" => $today,
+        "type" => "numeric"
+      )
+    )
+  ));
+
+#Custom
+  Global query
+    function adjust_queries($query) {
+      $today = date('Ymd');
+      if(!is_admin() AND is_post_type_archive('event') AND $query->is_main_query()) 
+        $query->set("meta_key", "event_date");
+        $query->set("orderby", "meta_value_num");
+        $query->set("order", "ASC");
+        $query->set("meta_query", array(
+          array(
+            "key" => "event_date",
+            "compare" => ">=",
+            "value" => $today,
+            "type" => "numeric"
+          )
+        ));
+    };
+
+  Pagination
+    

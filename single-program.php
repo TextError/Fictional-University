@@ -20,6 +20,37 @@
         <div class="generic-content">
           <?php the_content(); ?>
           <?php 
+            $queryProfessors = new WP_Query(array(
+              "posts_per_page" => -1,
+              "post_type" => "professor",
+              "orderby" => "title",
+              "order" => "ASC",
+              "meta_query" => array(
+                array(
+                  "key" => "related_programs",
+                  "compare" => "LIKE",
+                  "value" => '"'.get_the_ID().'"',
+                ),
+              ),
+            ));
+
+            if($queryProfessors->have_posts()) {
+              ?>
+                <hr class="section-break">
+                <h2 class="headline headline--medium"><?php the_title(); ?> Professors</h2>
+              <?php
+              while($queryProfessors->have_posts()) {
+                $queryProfessors->the_post();
+                ?>
+                  <li>
+                    <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                  </li>
+                <?php
+              }
+              wp_reset_postdata();
+            };
+
+
             $today = date('Ymd');
             $queryEvents = new WP_Query(array(
               "posts_per_page" => -1,
